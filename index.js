@@ -42,12 +42,20 @@ const server = app.listen(PORT, () =>{
     console.log(`Listening on port: ${PORT}`)
 });
 
-const io = socketIO(server);
+const io = socketIO(server, {
+    cors: {
+        origin: '*'
+    }
+});
 
 io.on('connection', (socket)=>{
     console.log('new connection');
 
-    socket.emit('test event', "some data loaded");
+    socket.emit('test', "data");
+
+    socket.on('message', (data)=>{
+        console.log(`reciviendo data: ${data}`)
+    })
 });
 
 
