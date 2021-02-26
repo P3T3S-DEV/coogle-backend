@@ -10,9 +10,8 @@ const compression = require("compression");
 const mongoose = require("mongoose");
 const socketIO = require("socket.io");
 
-
-const routes = require('./src/routes');
-const {PORT, MONGO_URI} = require('./src/config')
+const routes = require('./routes');
+const {PORT, MONGO_URI} = require('./config')
 
 const app = express();
 const appRoutes = express.Router();
@@ -22,8 +21,7 @@ appRoutes
     .use(express.json())
     .use(cors())
     .use(helmet())
-    .use(compression())
-    .use(express.static('public'));
+    .use(compression());
 
 appRoutes.use('/api', routes);
 
@@ -49,12 +47,11 @@ const io = socketIO(server, {
 });
 
 io.on('connection', (socket)=>{
-    console.log('new connection');
+    console.log('New socket connected with id: ' + socket.id);
 
-    socket.emit('test', "data");
-
-    socket.on('message', (data)=>{
-        console.log(`reciviendo data: ${data}`)
+    socket.on('client:message', (data)=>{
+        console.log(`client data: ${data}`);
+        socket.emit('server:message', data);
     })
 });
 
