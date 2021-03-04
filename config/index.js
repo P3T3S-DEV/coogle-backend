@@ -1,10 +1,11 @@
-'use strict';
+"use strict";
 
-if(process.env.NODE_ENV != "production"){
-    require('dotenv').config({path: '.env'});
- } 
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config({ path: ".env" });
+}
 
 module.exports = {
-    PORT: process.env.PORT,
-    MONGO_URI: process.env.MONGO_URI
-}
+  PORT: process.env.PORT,
+  MONGO_URI: process.env.MONGO_URI,
+  SECRET: process.env.SECRET,
+};
