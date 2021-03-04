@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const express = require("express");
 require("express-async-errors");
@@ -10,54 +10,51 @@ const compression = require("compression");
 const mongoose = require("mongoose");
 const socketIO = require("socket.io");
 
-
-const routes = require('./src/routes');
-const {PORT, MONGO_URI} = require('./src/config')
+const routes = require("./routes");
+const { PORT, MONGO_URI } = require("./config");
 
 const app = express();
 const appRoutes = express.Router();
 
 appRoutes
-    .use(morgan('dev'))
-    .use(express.json())
-    .use(cors())
-    .use(helmet())
-    .use(compression())
-    .use(express.static('public'));
+  .use(morgan("dev"))
+  .use(express.json())
+  .use(cors())
+  .use(helmet())
+  .use(compression());
 
-appRoutes.use('/api', routes);
+appRoutes.use("/api", routes);
 
 app.use(appRoutes);
 
 mongoose.set("useCreateIndex", true);
-mongoose.connect(MONGO_URI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true});
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+});
 
 const db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function() {
-        console.log("Database conected");
-    });
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("Database conected");
+});
 
-const server = app.listen(PORT, () =>{
-    console.log(`Listening on port: ${PORT}`)
+const server = app.listen(PORT, () => {
+  console.log(`Listening on port: ${PORT}`);
 });
 
 const io = socketIO(server, {
-    cors: {
-        origin: '*'
-    }
+  cors: {
+    origin: "*",
+  },
 });
 
-io.on('connection', (socket)=>{
-    console.log('new connection');
+io.on("connection", (socket) => {
+  console.log("New socket connected with id: " + socket.id);
 
-    socket.emit('test', "data");
-
-    socket.on('message', (data)=>{
-        console.log(`reciviendo data: ${data}`)
-    })
+  socket.on("chat:message", (data) => {
+    console.log(`client data: ${data}`);
+    io.emit("chat:message", data);
+  });
 });
-
-
-
-
