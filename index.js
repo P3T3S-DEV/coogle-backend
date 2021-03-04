@@ -47,8 +47,7 @@ const server = app.listen(PORT, () => {
 const io = socketIO(server, {
   cors: {
     origin: "*",
-  },
-  transports: ["xhr-polling", "polling"]
+  }
 });
 
 io.on("connection", (socket) => {
