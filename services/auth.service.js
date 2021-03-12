@@ -48,7 +48,7 @@ const signup = async (user) => {
 };
 
 const validate = async (token) => {
-  if (!token) {
+  if (!token || token == null) {
     const error = new Error();
     error.message = "Token must be sent";
     error.status = 400;
@@ -61,7 +61,7 @@ const validate = async (token) => {
       error.status = 401;
       throw error;
     }
-    return decodedToken.user;
+    return true;
   });
 
   return user;
@@ -72,3 +72,9 @@ module.exports = {
   signup,
   validate,
 };
+
+/* {
+      validation: true,
+      user: decodedToken.user.username,
+      token: token
+    }; */
