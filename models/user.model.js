@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const uniqueValidator = require("mongoose-unique-validator");
+const mongooseAutopopulate = require("mongoose-autopopulate");
 const { compareSync, hashSync, genSaltSync } = require("bcrypt");
 
 const UserSchema = new Schema(
@@ -23,6 +24,13 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    notes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "note",
+        autopopulate: true,
+      },
+    ],
   },
   { timestamps: { createdAt: true, updatedAt: true } }
 );
@@ -34,6 +42,7 @@ UserSchema.methods.toJSON = function () {
 };
 
 UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(mongooseAutopopulate);
 
 UserSchema.methods.comparePasswords = function (password) {
   return compareSync(password, this.password);
