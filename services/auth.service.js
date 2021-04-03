@@ -72,9 +72,3 @@ module.exports = {
   signup,
   validate,
 };
-
-/* {
-      validation: true,
-      user: decodedToken.user.username,
-      token: token
-    }; */
